@@ -496,6 +496,31 @@ export default function FridgeAIPage() {
               {/* ── Right: scrollable content ────────── */}
               <div className="results-split-content">
 
+                {/* Empty state — no ingredients detected */}
+                {result.detectedIngredients.length === 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, ease: EASE }}
+                    style={{ textAlign: 'center', padding: '48px 24px', backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: '20px' }}
+                  >
+                    <div style={{ fontSize: '48px', marginBottom: '16px', lineHeight: 1 }}>🤔</div>
+                    <h3 style={{ fontSize: '20px', fontWeight: 800, color: C.text, marginBottom: '10px', letterSpacing: '-0.3px' }}>
+                      Doesn&apos;t look like a fridge
+                    </h3>
+                    <p style={{ fontSize: '14px', color: C.muted, lineHeight: 1.6, marginBottom: '28px', maxWidth: '280px', margin: '0 auto 28px' }}>
+                      Make sure the photo shows food, ingredients, or a fridge. No people, furniture, or blank walls.
+                    </p>
+                    <button
+                      className="btn-primary"
+                      onClick={reset}
+                      style={{ padding: '14px 32px', fontSize: '15px', fontFamily: 'inherit' }}
+                    >
+                      Try again →
+                    </button>
+                  </motion.div>
+                )}
+
                 {/* Ingredients header */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>

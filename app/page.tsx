@@ -366,7 +366,7 @@ export default function FridgeAIPage() {
                   <button className="btn-primary" style={{ padding: '17px 24px', fontSize: '16px', letterSpacing: '0.2px' }} onClick={() => fileRef.current?.click()}>
                     Let&apos;s cook →
                   </button>
-                  <button className="btn-ghost" style={{ padding: '14px 24px', fontSize: '14px', fontFamily: 'inherit' }} onClick={() => cameraRef.current?.click()}>
+                  <button className="btn-ghost mobile-only" style={{ padding: '14px 24px', fontSize: '14px', fontFamily: 'inherit' }} onClick={() => cameraRef.current?.click()}>
                     📷 Take a photo
                   </button>
                 </div>

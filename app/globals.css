@@ -483,6 +483,16 @@ body::before {
   animation-play-state: paused;
 }
 
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .mobile-only {
+    display: flex;
+  }
+}
+
 /* ── Feature pills ─────────────────────────────────────────── */
 
 .feature-pill {

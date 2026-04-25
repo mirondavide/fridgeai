@@ -427,7 +427,7 @@ export default function FridgeAIPage() {
           {/* ── LOADING ──────────────────────────────── */}
           {phase === 'loading' && (
             <motion.div key="loading" {...PAGE_MOTION}
-              style={{ textAlign: 'center', padding: '96px 20px 80px', maxWidth: '540px', margin: '0 auto' }}
+              style={{ textAlign: 'center', padding: '20px', maxWidth: '540px', margin: '0 auto', minHeight: 'calc(100vh - 64px)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}
             >
               {/* Fridge scan visualization */}
               {imgPreview && (

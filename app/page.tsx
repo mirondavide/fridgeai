@@ -57,6 +57,13 @@ const DIFF_COLORS: Record<string, { bg: string; text: string }> = {
   hard:   { bg: 'rgba(239,68,68,0.15)',  text: '#f87171' },
 };
 
+const MARQUEE_ITEMS = [
+  '🥚 Eggs', '🥛 Milk', '🧀 Cheese', '🍅 Tomatoes', '🧄 Garlic',
+  '🧈 Butter', '🫑 Peppers', '🥕 Carrots', '🥦 Broccoli', '🍗 Chicken',
+  '🥩 Beef', '🧅 Onions', '🥑 Avocado', '🍋 Lemon', '🫙 Pasta', '🍄 Mushrooms',
+  '🫐 Blueberries', '🍓 Strawberries', '🧃 Orange Juice', '🥣 Oats',
+];
+
 const LOADING_STEPS = [
   { title: 'Scanning your fridge...',  sub: 'Reading the image'           },
   { title: 'Ingredients detected!',    sub: 'Building your recipes...'    },
@@ -233,6 +240,7 @@ export default function FridgeAIPage() {
   const [cookMode, setCookMode]       = useState<{ ri: number; si: number } | null>(null);
   const [loadingStep, setLoadingStep] = useState(0);
   const [cursor, setCursor]           = useState({ x: -1000, y: -1000 });
+  const [tilt, setTilt]               = useState({ x: 0, y: 0 });
   const fileRef                       = useRef<HTMLInputElement>(null);
   const cameraRef                     = useRef<HTMLInputElement>(null);
 
@@ -310,6 +318,17 @@ export default function FridgeAIPage() {
     return steps.length > 0 && steps.every((_, si) => checked[`${ri}-${si}`]);
   }
 
+  function handleUploadMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const dx   = (e.clientX - rect.left - rect.width  / 2) / (rect.width  / 2);
+    const dy   = (e.clientY - rect.top  - rect.height / 2) / (rect.height / 2);
+    setTilt({ x: dy * -6, y: dx * 6 });
+  }
+
+  function handleUploadMouseLeave() {
+    setTilt({ x: 0, y: 0 });
+  }
+
   /* ── Render ──────────────────────────────────────────── */
   return (
     <div style={{ minHeight: '100vh', backgroundColor: C.bg, fontFamily: 'inherit', position: 'relative' }}>
@@ -325,39 +344,68 @@ export default function FridgeAIPage() {
 
           {/* ── IDLE ─────────────────────────────────── */}
           {phase === 'idle' && (
-            <motion.div key="idle" {...PAGE_MOTION}
-              style={{ maxWidth: '560px', margin: '0 auto', padding: '120px 20px 80px', textAlign: 'center' }}
-            >
-              <h1 style={{ fontSize: 'clamp(2.4rem, 6vw, 3.5rem)', fontWeight: 900, lineHeight: 1.1, marginBottom: '20px', color: C.text, letterSpacing: '-1.5px' }}>
-                Your fridge.<br />
-                <span className="teal-gradient-text">Three recipes.</span>
-              </h1>
+            <motion.div key="idle" {...PAGE_MOTION} className="hero-split-idle">
 
-              <p style={{ fontSize: '17px', fontWeight: 500, color: C.muted, lineHeight: 1.65, maxWidth: '380px', margin: '0 auto 48px' }}>
-                No sign-up. No nonsense. Just cook.
-              </p>
-
-              <div
-                className="upload-zone-border"
-                style={{ borderRadius: '20px', padding: '52px 24px', marginBottom: '16px' }}
-                onClick={() => fileRef.current?.click()}
-                onDrop={(e) => { e.preventDefault(); if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); }}
-                onDragOver={(e) => e.preventDefault()}
-              >
-                <div style={{ width: '48px', height: '48px', borderRadius: '50%', border: '1.5px solid rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-                  <span style={{ fontSize: '24px', color: 'rgba(255,255,255,0.25)', lineHeight: 1, fontWeight: 300 }}>+</span>
+              {/* ── Text column ────────────────────────── */}
+              <div className="hero-text-idle">
+                {/* Feature pills */}
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '36px' }}>
+                  {[['⚡', '~5 sec scan'], ['🔒', 'No sign-up'], ['🍳', '3 recipes']].map(([icon, label]) => (
+                    <span key={label} className="feature-pill">{icon} {label}</span>
+                  ))}
                 </div>
-                <p style={{ fontSize: '13px', color: C.muted, fontWeight: 500 }}>
-                  drop a photo or click to browse
+
+                {/* Headline */}
+                <h1 style={{ fontSize: 'clamp(2.8rem, 6vw, 5rem)', fontWeight: 900, lineHeight: 1.05, marginBottom: '24px', color: C.text, letterSpacing: '-2.5px' }}>
+                  Open your{' '}
+                  <span className="teal-gradient-text">fridge.</span>
+                  <br />We&apos;ll handle
+                  <br />the rest.
+                </h1>
+
+                {/* Tagline */}
+                <p style={{ fontSize: '18px', fontWeight: 500, color: C.muted, lineHeight: 1.65, marginBottom: '48px', maxWidth: '380px' }}>
+                  Drop a photo. Get 3 real recipes you can make with what you already have.
                 </p>
+
+                {/* CTAs */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '300px' }}>
+                  <button className="btn-primary" style={{ padding: '17px 24px', fontSize: '16px', letterSpacing: '0.2px' }} onClick={() => fileRef.current?.click()}>
+                    Let&apos;s cook →
+                  </button>
+                  <button className="btn-ghost" style={{ padding: '14px 24px', fontSize: '14px', fontFamily: 'inherit' }} onClick={() => cameraRef.current?.click()}>
+                    📷 Take a photo
+                  </button>
+                </div>
               </div>
 
-              <button className="btn-primary" style={{ width: '100%', padding: '17px', fontSize: '17px', letterSpacing: '0.2px' }} onClick={() => fileRef.current?.click()}>
-                Let&apos;s cook →
-              </button>
-              <button className="btn-ghost" style={{ width: '100%', padding: '14px', fontSize: '15px', fontFamily: 'inherit', marginTop: '10px' }} onClick={() => cameraRef.current?.click()}>
-                📷 Take a photo
-              </button>
+              {/* ── Upload portal column ────────────────── */}
+              <div className="hero-upload-idle">
+                <div
+                  className="upload-scanner-wrap"
+                  style={{
+                    transform: `perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+                    transition: tilt.x === 0 && tilt.y === 0 ? 'transform 0.55s ease' : 'transform 0.08s ease',
+                  }}
+                  onClick={() => fileRef.current?.click()}
+                  onMouseMove={handleUploadMouseMove}
+                  onMouseLeave={handleUploadMouseLeave}
+                  onDrop={(e) => { e.preventDefault(); if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); }}
+                  onDragOver={(e) => e.preventDefault()}
+                >
+                  <div className="upload-scanner-inner">
+                    <div style={{ width: '80px', height: '80px', borderRadius: '50%', border: '1px solid rgba(0,212,170,0.2)', backgroundColor: 'rgba(0,212,170,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
+                      <span style={{ fontSize: '34px', color: C.primary, lineHeight: 1, fontWeight: 300 }}>+</span>
+                    </div>
+                    <p style={{ fontSize: '17px', fontWeight: 700, color: C.text, marginBottom: '10px', letterSpacing: '-0.3px' }}>
+                      Drop your fridge photo
+                    </p>
+                    <p style={{ fontSize: '13px', color: C.muted, lineHeight: 1.6 }}>
+                      JPEG · PNG · HEIC · WebP<br />Max 8 MB
+                    </p>
+                  </div>
+                </div>
+              </div>
             </motion.div>
           )}
 
@@ -581,6 +629,28 @@ export default function FridgeAIPage() {
 
         </AnimatePresence>
       </div>
+
+      {/* ── Ingredient marquee (idle only) ──────────────────── */}
+      <AnimatePresence>
+        {phase === 'idle' && (
+          <motion.div
+            key="marquee"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.4 }}
+            style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 20, borderTop: '1px solid rgba(255,255,255,0.05)', backgroundColor: 'rgba(3,9,7,0.88)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)', padding: '14px 0', overflow: 'hidden' }}
+          >
+            <div className="marquee-track">
+              {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, i) => (
+                <span key={i} style={{ fontSize: '12px', fontWeight: 600, color: 'rgba(255,255,255,0.22)', padding: '0 22px', whiteSpace: 'nowrap', letterSpacing: '0.02em' }}>
+                  {item}
+                </span>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── Cook Mode Overlay ────────────────────────────── */}
       <AnimatePresence>

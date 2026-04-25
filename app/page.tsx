@@ -348,13 +348,6 @@ export default function FridgeAIPage() {
 
               {/* ── Text column ────────────────────────── */}
               <div className="hero-text-idle">
-                {/* Feature pills */}
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '36px' }}>
-                  {[['⚡', '~5 sec scan'], ['🔒', 'No sign-up'], ['🍳', '3 recipes']].map(([icon, label]) => (
-                    <span key={label} className="feature-pill">{icon} {label}</span>
-                  ))}
-                </div>
-
                 {/* Headline */}
                 <h1 style={{ fontSize: 'clamp(2.8rem, 6vw, 5rem)', fontWeight: 900, lineHeight: 1.05, marginBottom: '24px', color: C.text, letterSpacing: '-2.5px' }}>
                   Open your{' '}

@@ -362,7 +362,7 @@ body::before {
   width: 500px;
   height: 500px;
   transform: translate(-50%, -50%);
-  transition: left 0.12s ease, top 0.12s ease;
+  transition: left 0.04s ease, top 0.04s ease;
   z-index: 0;
 }
 

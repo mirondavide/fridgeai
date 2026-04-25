@@ -264,3 +264,115 @@ body::before {
   text-transform: uppercase;
   color:          rgba(255,255,255,0.3);
 }
+
+/* ── Results split layout (desktop) ───────────────────────── */
+
+.results-split {
+  display: block;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 88px 20px 80px;
+}
+
+.results-split-photo {
+  width: 100%;
+  margin-bottom: 32px;
+}
+
+.results-split-content {
+  width: 100%;
+}
+
+@media (min-width: 820px) {
+  .results-split {
+    display: flex;
+    max-width: 1120px;
+    padding: 88px 32px 80px;
+    gap: 48px;
+    align-items: flex-start;
+  }
+
+  .results-split-photo {
+    width: 380px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 88px;
+    margin-bottom: 0;
+  }
+
+  .results-split-content {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+/* ── Cook mode overlay ─────────────────────────────────────── */
+
+.cook-mode-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(3, 10, 8, 0.97);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+/* ── Recipe card with image ────────────────────────────────── */
+
+.recipe-card-image-header {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+  border-radius: 0;
+}
+
+.recipe-card-image-header img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.recipe-card-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(5,14,12,0.1) 0%,
+    rgba(5,14,12,0.75) 100%
+  );
+  display: flex;
+  align-items: flex-end;
+  padding: 16px 20px;
+}
+
+/* ── Cursor glow ───────────────────────────────────────────── */
+
+.cursor-glow {
+  position: fixed;
+  pointer-events: none;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,212,170,0.07) 0%, transparent 65%);
+  width: 500px;
+  height: 500px;
+  transform: translate(-50%, -50%);
+  transition: left 0.12s ease, top 0.12s ease;
+  z-index: 0;
+}
+
+/* ── Loading step transitions ──────────────────────────────── */
+
+@keyframes step-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.loading-step {
+  animation: step-in 0.4s cubic-bezier(0.16,1,0.3,1) both;
+}

@@ -84,7 +84,7 @@ Respond with ONLY valid JSON, no markdown, no extra text:
 
     const text = result.response.text();
 
-    let fridgeData: unknown;
+    let fridgeData: { detectedIngredients: string[]; recipes: Array<{ name: string; emoji: string; time: string; difficulty: string; description: string; steps: string[]; missingIngredients: string[]; imageUrl?: string | null }> };
     try {
       const cleaned = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
       fridgeData = JSON.parse(cleaned);
@@ -92,6 +92,28 @@ Respond with ONLY valid JSON, no markdown, no extra text:
       return NextResponse.json(
         { error: 'AI response parsing failed. Please try again.' },
         { status: 500 }
+      );
+    }
+
+    if (Array.isArray(fridgeData.recipes)) {
+      await Promise.all(
+        fridgeData.recipes.map(async (recipe) => {
+          try {
+            const query = encodeURIComponent(`${recipe.name} food dish`);
+            const pexelsRes = await fetch(
+              `https://api.pexels.com/v1/search?query=${query}&per_page=1&orientation=landscape`,
+              { headers: { Authorization: process.env.PEXELS_API_KEY ?? '' } }
+            );
+            if (pexelsRes.ok) {
+              const pexelsData = await pexelsRes.json() as { photos: Array<{ src: { large: string; medium: string } }> };
+              recipe.imageUrl = pexelsData.photos[0]?.src?.large ?? pexelsData.photos[0]?.src?.medium ?? null;
+            } else {
+              recipe.imageUrl = null;
+            }
+          } catch {
+            recipe.imageUrl = null;
+          }
+        })
       );
     }
 

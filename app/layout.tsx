@@ -11,6 +11,13 @@ const jakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: 'FridgeAI — What can I cook tonight?',
   description: 'Drop a photo of your fridge. AI detects your ingredients and crafts 3 recipes you can make right now.',
+  manifest: '/manifest.json',
+  themeColor: '#00D4AA',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'FridgeAI',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

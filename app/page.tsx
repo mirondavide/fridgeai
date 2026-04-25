@@ -471,39 +471,60 @@ export default function FridgeAIPage() {
               {/* ── Left: sticky photo pane ─────────── */}
               <div className="results-split-photo">
                 {imgPreview && (
-                  <img
-                    src={imgPreview} alt="Your fridge"
-                    style={{ width: '100%', aspectRatio: '4/3', objectFit: 'cover', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.08)', display: 'block' }}
-                  />
+                  <div style={{ position: 'relative' }}>
+                    <img
+                      src={imgPreview} alt="Your fridge"
+                      style={{ width: '100%', aspectRatio: '4/3', objectFit: 'cover', borderRadius: '20px', border: '1px solid rgba(0,212,170,0.15)', display: 'block', boxShadow: '0 0 0 1px rgba(0,212,170,0.08), 0 32px 80px rgba(0,0,0,0.5)' }}
+                    />
+                    {/* Subtle scan corners */}
+                    <div style={{ position: 'absolute', top: 10, left: 10, width: 18, height: 18, borderTop: '2px solid rgba(0,212,170,0.5)', borderLeft: '2px solid rgba(0,212,170,0.5)', borderRadius: '2px 0 0 0' }} />
+                    <div style={{ position: 'absolute', top: 10, right: 10, width: 18, height: 18, borderTop: '2px solid rgba(0,212,170,0.5)', borderRight: '2px solid rgba(0,212,170,0.5)', borderRadius: '0 2px 0 0' }} />
+                    <div style={{ position: 'absolute', bottom: 10, left: 10, width: 18, height: 18, borderBottom: '2px solid rgba(0,212,170,0.5)', borderLeft: '2px solid rgba(0,212,170,0.5)', borderRadius: '0 0 0 2px' }} />
+                    <div style={{ position: 'absolute', bottom: 10, right: 10, width: 18, height: 18, borderBottom: '2px solid rgba(0,212,170,0.5)', borderRight: '2px solid rgba(0,212,170,0.5)', borderRadius: '0 0 2px 0' }} />
+                  </div>
                 )}
-                <button className="btn-ghost" onClick={reset} style={{ width: '100%', marginTop: '16px', padding: '13px', fontSize: '14px', fontFamily: 'inherit' }}>
-                  Start over
+                <button
+                  onClick={reset}
+                  style={{ width: '100%', marginTop: '14px', padding: '11px', fontSize: '13px', fontFamily: 'inherit', background: 'none', border: 'none', cursor: 'pointer', color: C.muted, fontWeight: 600, transition: 'color 0.15s' }}
+                  onMouseEnter={e => (e.currentTarget.style.color = C.text)}
+                  onMouseLeave={e => (e.currentTarget.style.color = C.muted)}
+                >
+                  ← Start over
                 </button>
               </div>
 
               {/* ── Right: scrollable content ────────── */}
               <div className="results-split-content">
 
-                {/* Ingredients */}
-                <div className="section-label" style={{ marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  INGREDIENTS
-                  <span style={{ color: C.primary, fontWeight: 800 }}>{result.detectedIngredients.length}</span>
+                {/* Ingredients header */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{ width: '3px', height: '16px', background: `linear-gradient(180deg, ${C.primary}, ${C.primaryDark})`, borderRadius: '99px' }} />
+                    <span style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)' }}>Ingredients</span>
+                  </div>
+                  <span style={{ fontSize: '13px', fontWeight: 800, color: C.primary, backgroundColor: 'rgba(0,212,170,0.1)', border: '1px solid rgba(0,212,170,0.2)', borderRadius: '99px', padding: '2px 10px' }}>
+                    {result.detectedIngredients.length} found
+                  </span>
                 </div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '32px' }}>
+
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '36px' }}>
                   {result.detectedIngredients.map((ing, i) => {
                     const chip = CHIP_COLORS[i % 6];
                     return (
-                      <span key={i} style={{ display: 'inline-block', padding: '7px 14px', borderRadius: '99px', fontSize: '13px', fontWeight: 700, backgroundColor: chip.bg, color: chip.text, border: `1px solid ${chip.border}`, animation: `chip-in 0.4s ${i * 0.05}s cubic-bezier(0.16,1,0.3,1) both` }}>
+                      <span key={i} style={{ display: 'inline-block', padding: '7px 14px', borderRadius: '99px', fontSize: '13px', fontWeight: 600, backgroundColor: chip.bg, color: chip.text, border: `1px solid ${chip.border}`, animation: `chip-in 0.4s ${i * 0.05}s cubic-bezier(0.16,1,0.3,1) both` }}>
                         {ing}
                       </span>
                     );
                   })}
                 </div>
 
-                <div style={{ height: '1px', backgroundColor: 'rgba(255,255,255,0.07)', marginBottom: '24px' }} />
+                <div style={{ height: '1px', background: 'linear-gradient(90deg, rgba(0,212,170,0.2), rgba(255,255,255,0.06) 60%, transparent)', marginBottom: '32px' }} />
 
-                {/* Recipes */}
-                <div className="section-label" style={{ marginBottom: '16px' }}>TONIGHT&apos;S MENU</div>
+                {/* Recipes header */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
+                  <div style={{ width: '3px', height: '16px', background: `linear-gradient(180deg, ${C.primary}, ${C.primaryDark})`, borderRadius: '99px' }} />
+                  <span style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)' }}>Tonight&apos;s menu</span>
+                </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   {result.recipes.map((recipe, ri) => {
@@ -524,21 +545,25 @@ export default function FridgeAIPage() {
                           <div className="recipe-card-image-header">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={recipe.imageUrl} alt={recipe.name} />
+                            {/* Recipe number */}
+                            <div style={{ position: 'absolute', top: 14, right: 14, fontSize: '11px', fontWeight: 800, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.08em', backgroundColor: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)', borderRadius: '6px', padding: '3px 8px' }}>
+                              0{ri + 1}
+                            </div>
                             <div className="recipe-card-image-overlay">
                               <button
                                 onClick={() => setOpenIdx(isOpen ? null : ri)}
                                 style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, width: '100%', textAlign: 'left', fontFamily: 'inherit' }}
                               >
                                 <div style={{ display: 'flex', alignItems: 'flex-end', gap: '12px' }}>
-                                  <span style={{ fontSize: '32px', lineHeight: 1, flexShrink: 0 }}>{recipe.emoji}</span>
+                                  <span style={{ fontSize: '30px', lineHeight: 1, flexShrink: 0 }}>{recipe.emoji}</span>
                                   <div style={{ flex: 1, minWidth: 0 }}>
-                                    <div style={{ fontSize: '18px', fontWeight: 800, color: '#fff', marginBottom: '7px', letterSpacing: '-0.3px' }}>{recipe.name}</div>
-                                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                                      <span style={{ fontSize: '12px', fontWeight: 700, color: 'rgba(255,255,255,0.85)', backgroundColor: 'rgba(0,0,0,0.35)', borderRadius: '99px', padding: '3px 10px' }}>⏱ {recipe.time}</span>
-                                      <span style={{ fontSize: '12px', fontWeight: 700, backgroundColor: diff.bg, color: diff.text, borderRadius: '99px', padding: '3px 10px' }}>{recipe.difficulty}</span>
+                                    <div style={{ fontSize: '17px', fontWeight: 800, color: '#fff', marginBottom: '8px', letterSpacing: '-0.3px', lineHeight: 1.2 }}>{recipe.name}</div>
+                                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                                      <span style={{ fontSize: '11px', fontWeight: 700, color: 'rgba(255,255,255,0.8)', backgroundColor: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)', borderRadius: '99px', padding: '3px 10px' }}>⏱ {recipe.time}</span>
+                                      <span style={{ fontSize: '11px', fontWeight: 700, backgroundColor: diff.bg, color: diff.text, borderRadius: '99px', padding: '3px 10px', backdropFilter: 'blur(8px)' }}>{recipe.difficulty}</span>
                                     </div>
                                   </div>
-                                  <span style={{ fontSize: '18px', color: 'rgba(255,255,255,0.7)', flexShrink: 0, transform: isOpen ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s cubic-bezier(0.16,1,0.3,1)', display: 'inline-block' }}>›</span>
+                                  <span style={{ fontSize: '20px', color: 'rgba(255,255,255,0.6)', flexShrink: 0, transform: isOpen ? 'rotate(90deg)' : 'none', transition: 'transform 0.25s cubic-bezier(0.16,1,0.3,1)', display: 'inline-block' }}>›</span>
                                 </div>
                               </button>
                             </div>
@@ -548,17 +573,18 @@ export default function FridgeAIPage() {
                             <div style={{ height: '3px', background: RECIPE_GRADIENTS[ri % 3] }} />
                             <button
                               onClick={() => setOpenIdx(isOpen ? null : ri)}
-                              style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', padding: '20px', display: 'flex', alignItems: 'center', gap: '16px', textAlign: 'left', fontFamily: 'inherit' }}
+                              style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', padding: '20px', display: 'flex', alignItems: 'center', gap: '14px', textAlign: 'left', fontFamily: 'inherit' }}
                             >
-                              <span style={{ fontSize: '36px', lineHeight: 1, flexShrink: 0 }}>{recipe.emoji}</span>
+                              <span style={{ fontSize: '11px', fontWeight: 800, color: C.veryMuted, letterSpacing: '0.08em', flexShrink: 0, minWidth: '24px' }}>0{ri + 1}</span>
+                              <span style={{ fontSize: '32px', lineHeight: 1, flexShrink: 0 }}>{recipe.emoji}</span>
                               <div style={{ flex: 1, minWidth: 0 }}>
-                                <div style={{ fontSize: '16px', fontWeight: 800, color: C.text, marginBottom: '8px', letterSpacing: '-0.2px' }}>{recipe.name}</div>
-                                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                                  <span style={{ fontSize: '12px', fontWeight: 700, color: C.muted, backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '99px', padding: '4px 10px' }}>⏱ {recipe.time}</span>
-                                  <span style={{ fontSize: '12px', fontWeight: 700, backgroundColor: diff.bg, color: diff.text, borderRadius: '99px', padding: '4px 10px' }}>{recipe.difficulty}</span>
+                                <div style={{ fontSize: '16px', fontWeight: 800, color: C.text, marginBottom: '7px', letterSpacing: '-0.2px' }}>{recipe.name}</div>
+                                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                                  <span style={{ fontSize: '11px', fontWeight: 700, color: C.muted, backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '99px', padding: '3px 10px' }}>⏱ {recipe.time}</span>
+                                  <span style={{ fontSize: '11px', fontWeight: 700, backgroundColor: diff.bg, color: diff.text, borderRadius: '99px', padding: '3px 10px' }}>{recipe.difficulty}</span>
                                 </div>
                               </div>
-                              <span style={{ fontSize: '18px', color: C.muted, flexShrink: 0, transform: isOpen ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s cubic-bezier(0.16,1,0.3,1)', display: 'inline-block' }}>›</span>
+                              <span style={{ fontSize: '20px', color: C.muted, flexShrink: 0, transform: isOpen ? 'rotate(90deg)' : 'none', transition: 'transform 0.25s cubic-bezier(0.16,1,0.3,1)', display: 'inline-block' }}>›</span>
                             </button>
                           </>
                         )}

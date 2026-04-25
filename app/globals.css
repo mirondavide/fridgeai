@@ -534,10 +534,11 @@ body::before {
   background: conic-gradient(
     from 0deg,
     transparent 0%,
-    transparent 55%,
-    rgba(0, 212, 170, 0.65) 65%,
-    rgba(0, 255, 200, 0.3) 70%,
-    transparent 78%,
+    transparent 48%,
+    rgba(0, 212, 170, 0.9)  61%,
+    rgba(0, 255, 200, 0.55) 66%,
+    rgba(0, 255, 200, 0.18) 72%,
+    transparent 80%,
     transparent 100%
   );
   animation: scanner-rotate 4s linear infinite;
@@ -587,6 +588,54 @@ body::before {
 }
 
 /* ── Feature pills ─────────────────────────────────────────── */
+
+/* ── Hero badge ─────────────────────────────────────────── */
+
+@keyframes badge-border-pulse {
+  0%, 100% { border-color: rgba(0,212,170,0.22); box-shadow: none; }
+  50%       { border-color: rgba(0,212,170,0.55); box-shadow: 0 0 18px rgba(0,212,170,0.12); }
+}
+
+.hero-badge {
+  display:        inline-flex;
+  align-items:    center;
+  gap:            8px;
+  padding:        7px 14px 7px 10px;
+  border-radius:  99px;
+  background:     rgba(0,212,170,0.06);
+  border:         1px solid rgba(0,212,170,0.22);
+  font-size:      12px;
+  font-weight:    700;
+  color:          rgba(0,212,170,0.85);
+  letter-spacing: 0.03em;
+  animation:      badge-border-pulse 3.5s ease-in-out infinite;
+  white-space:    nowrap;
+}
+
+/* ── Shimmer headline text ───────────────────────────────── */
+
+@keyframes text-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.teal-shimmer-text {
+  background:              linear-gradient(90deg, #009E7F 0%, #00D4AA 20%, #00FFC8 42%, #ccfff5 50%, #00FFC8 58%, #00D4AA 80%, #009E7F 100%);
+  background-size:         220% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip:         text;
+  animation:               text-shimmer 4s linear infinite;
+}
+
+/* ── Radar ping ──────────────────────────────────────────── */
+
+@keyframes radar-ping {
+  0%   { transform: scale(0.85); opacity: 0.65; }
+  100% { transform: scale(1.7);  opacity: 0;    }
+}
+
+/* ── Feature pills (legacy) ─────────────────────────────── */
 
 .feature-pill {
   display: inline-flex;

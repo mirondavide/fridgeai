@@ -98,7 +98,7 @@ function BackgroundOrbs() {
         style={{
           position: 'fixed', top: '-100px', left: '-150px',
           width: '600px', height: '600px', borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(0,212,170,0.10) 0%, transparent 65%)',
+          background: 'radial-gradient(circle, rgba(0,212,170,0.12) 0%, transparent 65%)',
           pointerEvents: 'none', zIndex: 0,
         }}
       />
@@ -107,8 +107,19 @@ function BackgroundOrbs() {
         style={{
           position: 'fixed', bottom: '-120px', right: '-100px',
           width: '500px', height: '500px', borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(0,180,140,0.07) 0%, transparent 65%)',
+          background: 'radial-gradient(circle, rgba(0,180,140,0.09) 0%, transparent 65%)',
           pointerEvents: 'none', zIndex: 0,
+        }}
+      />
+      {/* Purple depth orb */}
+      <div
+        className="animate-float-orb-a"
+        style={{
+          position: 'fixed', top: '25%', right: '10%',
+          width: '450px', height: '450px', borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(139,92,246,0.07) 0%, transparent 65%)',
+          pointerEvents: 'none', zIndex: 0,
+          animationDelay: '-8s', animationDuration: '26s',
         }}
       />
     </>
@@ -360,57 +371,122 @@ export default function FridgeAIPage() {
 
               {/* ── Text column ────────────────────────── */}
               <div className="hero-text-idle">
+                {/* Badge */}
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.45, ease: EASE }}
+                  style={{ marginBottom: '28px' }}
+                >
+                  <span className="hero-badge">
+                    <span style={{ display: 'inline-block', width: '7px', height: '7px', borderRadius: '50%', backgroundColor: C.primary, flexShrink: 0, animation: 'glow-pulse 2s ease-in-out infinite' }} />
+                    AI-Powered Food Scanner
+                  </span>
+                </motion.div>
+
                 {/* Headline */}
-                <h1 style={{ fontSize: 'clamp(2.8rem, 6vw, 5rem)', fontWeight: 900, lineHeight: 1.05, marginBottom: '24px', color: C.text, letterSpacing: '-2.5px' }}>
+                <motion.h1
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.55, delay: 0.08, ease: EASE }}
+                  style={{ fontSize: 'clamp(3rem, 6.5vw, 5.2rem)', fontWeight: 900, lineHeight: 1.04, marginBottom: '24px', color: C.text, letterSpacing: '-2.5px' }}
+                >
                   Open your{' '}
-                  <span className="teal-gradient-text">fridge.</span>
+                  <span className="teal-shimmer-text">fridge.</span>
                   <br />We&apos;ll handle
                   <br />the rest.
-                </h1>
+                </motion.h1>
 
                 {/* Tagline */}
-                <p style={{ fontSize: '18px', fontWeight: 500, color: C.muted, lineHeight: 1.65, marginBottom: '48px', maxWidth: '380px' }}>
+                <motion.p
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.16, ease: EASE }}
+                  style={{ fontSize: '18px', fontWeight: 500, color: C.muted, lineHeight: 1.65, marginBottom: '40px', maxWidth: '380px' }}
+                >
                   Drop a photo. Get 3 real recipes you can make with what you already have.
-                </p>
+                </motion.p>
 
                 {/* CTAs */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '300px' }}>
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.45, delay: 0.24, ease: EASE }}
+                  style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '300px' }}
+                >
                   <button className="btn-primary" style={{ padding: '17px 24px', fontSize: '16px', letterSpacing: '0.2px' }} onClick={() => fileRef.current?.click()}>
                     Let&apos;s cook →
                   </button>
                   <button className="btn-ghost mobile-only" style={{ padding: '14px 24px', fontSize: '14px', fontFamily: 'inherit' }} onClick={() => cameraRef.current?.click()}>
                     📷 Take a photo
                   </button>
-                </div>
+                </motion.div>
               </div>
 
               {/* ── Upload portal column ────────────────── */}
-              <div className="hero-upload-idle">
-                <div
-                  className="upload-scanner-wrap"
-                  style={{
-                    transform: `perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
-                    transition: tilt.x === 0 && tilt.y === 0 ? 'transform 0.55s ease' : 'transform 0.08s ease',
-                  }}
-                  onClick={() => fileRef.current?.click()}
-                  onMouseMove={handleUploadMouseMove}
-                  onMouseLeave={handleUploadMouseLeave}
-                  onDrop={(e) => { e.preventDefault(); if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); }}
-                  onDragOver={(e) => e.preventDefault()}
-                >
-                  <div className="upload-scanner-inner">
-                    <div style={{ width: '80px', height: '80px', borderRadius: '50%', border: '1px solid rgba(0,212,170,0.2)', backgroundColor: 'rgba(0,212,170,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
-                      <span style={{ fontSize: '34px', color: C.primary, lineHeight: 1, fontWeight: 300 }}>+</span>
+              <motion.div
+                className="hero-upload-idle"
+                initial={{ opacity: 0, scale: 0.95, x: 20 }}
+                animate={{ opacity: 1, scale: 1, x: 0 }}
+                transition={{ duration: 0.65, delay: 0.18, ease: EASE }}
+              >
+                <div style={{ position: 'relative' }}>
+                  {/* Glow halo behind scanner */}
+                  <div style={{
+                    position: 'absolute', inset: '-60px',
+                    background: 'radial-gradient(ellipse at 55% 45%, rgba(0,212,170,0.11) 0%, rgba(0,212,170,0.03) 45%, transparent 65%)',
+                    pointerEvents: 'none',
+                    animation: 'glow-pulse 5s ease-in-out infinite',
+                  }} />
+                  <div
+                    className="upload-scanner-wrap"
+                    style={{
+                      transform: `perspective(900px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+                      transition: tilt.x === 0 && tilt.y === 0 ? 'transform 0.55s ease' : 'transform 0.08s ease',
+                    }}
+                    onClick={() => fileRef.current?.click()}
+                    onMouseMove={handleUploadMouseMove}
+                    onMouseLeave={handleUploadMouseLeave}
+                    onDrop={(e) => { e.preventDefault(); if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); }}
+                    onDragOver={(e) => e.preventDefault()}
+                  >
+                    <div className="upload-scanner-inner">
+                      {/* Concentric radar target */}
+                      <div style={{ position: 'relative', width: '104px', height: '104px', margin: '0 auto 28px' }}>
+                        {/* Ping rings */}
+                        <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: '1px solid rgba(0,212,170,0.3)', animation: 'radar-ping 3s ease-out infinite 0s' }} />
+                        <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: '1px solid rgba(0,212,170,0.2)', animation: 'radar-ping 3s ease-out infinite 1s' }} />
+                        {/* Static mid ring */}
+                        <div style={{ position: 'absolute', inset: '18px', borderRadius: '50%', border: '1px solid rgba(0,212,170,0.18)' }} />
+                        {/* Center target */}
+                        <div style={{
+                          position: 'absolute', inset: '32px',
+                          borderRadius: '50%',
+                          background: 'radial-gradient(circle, rgba(0,212,170,0.2) 0%, rgba(0,212,170,0.07) 100%)',
+                          border: '1.5px solid rgba(0,212,170,0.55)',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          animation: 'glow-pulse 2.5s ease-in-out infinite',
+                        }}>
+                          <span style={{ fontSize: '14px', lineHeight: 1 }}>🧊</span>
+                        </div>
+                      </div>
+
+                      {/* SCAN READY status */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '7px', justifyContent: 'center', marginBottom: '16px' }}>
+                        <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: C.primary, flexShrink: 0, animation: 'glow-pulse 1.8s ease-in-out infinite' }} />
+                        <span style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(0,212,170,0.65)' }}>Scan Ready</span>
+                      </div>
+
+                      <p style={{ fontSize: '16px', fontWeight: 700, color: C.text, marginBottom: '8px', letterSpacing: '-0.3px' }}>
+                        Drop your fridge photo
+                      </p>
+                      <p style={{ fontSize: '12px', color: C.muted, lineHeight: 1.7 }}>
+                        JPEG · PNG · HEIC · WebP · Max 8 MB
+                      </p>
                     </div>
-                    <p style={{ fontSize: '17px', fontWeight: 700, color: C.text, marginBottom: '10px', letterSpacing: '-0.3px' }}>
-                      Drop your fridge photo
-                    </p>
-                    <p style={{ fontSize: '13px', color: C.muted, lineHeight: 1.6 }}>
-                      JPEG · PNG · HEIC · WebP<br />Max 8 MB
-                    </p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
           )}
 

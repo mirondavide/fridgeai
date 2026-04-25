@@ -427,16 +427,24 @@ export default function FridgeAIPage() {
           {/* ── LOADING ──────────────────────────────── */}
           {phase === 'loading' && (
             <motion.div key="loading" {...PAGE_MOTION}
-              style={{ textAlign: 'center', padding: '120px 20px 80px' }}
+              style={{ textAlign: 'center', padding: '96px 20px 80px', maxWidth: '540px', margin: '0 auto' }}
             >
-              <div style={{ width: '72px', height: '72px', position: 'relative', margin: '0 auto 36px' }}>
-                <div style={{
-                  border: '3px solid rgba(0,212,170,0.15)',
-                  borderTop: `3px solid ${C.primary}`,
-                  borderRadius: '50%', width: '100%', height: '100%',
-                  animation: 'spin-ring 1s linear infinite',
-                }} />
-              </div>
+              {/* Fridge scan visualization */}
+              {imgPreview && (
+                <div className="loading-scan-wrap" style={{ marginBottom: '36px' }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={imgPreview} alt="Scanning" className="loading-scan-img" />
+                  <div className="scan-grid" />
+                  <div className="scan-beam" />
+                  <div className="scan-line" />
+                  <div className="vf-corner vf-tl" />
+                  <div className="vf-corner vf-tr" />
+                  <div className="vf-corner vf-bl" />
+                  <div className="vf-corner vf-br" />
+                </div>
+              )}
+
+              {/* Phase text */}
               <AnimatePresence mode="wait">
                 <motion.div
                   key={loadingStep}
@@ -445,7 +453,7 @@ export default function FridgeAIPage() {
                   exit={{ opacity: 0, y: -8   }}
                   transition={{ duration: 0.3 }}
                 >
-                  <h2 style={{ fontSize: '24px', fontWeight: 800, color: C.text, marginBottom: '8px' }}>
+                  <h2 style={{ fontSize: '22px', fontWeight: 800, color: C.text, marginBottom: '8px' }}>
                     {LOADING_STEPS[loadingStep].title}
                   </h2>
                   <p style={{ fontSize: '15px', color: C.muted }}>

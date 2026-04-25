@@ -366,6 +366,92 @@ body::before {
   z-index: 0;
 }
 
+/* ── Loading scanner ───────────────────────────────────────── */
+
+@keyframes scan-sweep {
+  0%   { top: -6%; }
+  100% { top: 102%; }
+}
+
+@keyframes vf-pulse {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1;   }
+}
+
+@keyframes grid-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.loading-scan-wrap {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(0,212,170,0.25);
+  box-shadow: 0 0 40px rgba(0,212,170,0.08);
+}
+
+.loading-scan-img {
+  width: 100%;
+  display: block;
+  filter: brightness(0.5) saturate(0.7);
+}
+
+.scan-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,170,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,170,0.06) 1px, transparent 1px);
+  background-size: 44px 44px;
+  pointer-events: none;
+  animation: grid-fade-in 0.6s ease both;
+}
+
+.scan-beam {
+  position: absolute;
+  left: 0; right: 0;
+  height: 90px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0,212,170,0.06) 30%,
+    rgba(0,212,170,0.22) 50%,
+    rgba(0,212,170,0.06) 70%,
+    transparent 100%
+  );
+  animation: scan-sweep 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  pointer-events: none;
+  top: -6%;
+}
+
+.scan-line {
+  position: absolute;
+  left: 0; right: 0;
+  height: 1.5px;
+  background: rgba(0,212,170,0.95);
+  box-shadow:
+    0 0 6px 1px rgba(0,212,170,0.7),
+    0 0 24px 6px rgba(0,212,170,0.3),
+    0 0 60px 16px rgba(0,212,170,0.1);
+  animation: scan-sweep 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  pointer-events: none;
+  top: -6%;
+}
+
+.vf-corner {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: #00D4AA;
+  border-style: solid;
+  animation: vf-pulse 2s ease-in-out infinite;
+}
+.vf-tl { top: 14px;    left: 14px;   border-width: 2px 0 0 2px; }
+.vf-tr { top: 14px;    right: 14px;  border-width: 2px 2px 0 0; animation-delay: 0.5s; }
+.vf-bl { bottom: 14px; left: 14px;   border-width: 0 0 2px 2px; animation-delay: 1s;   }
+.vf-br { bottom: 14px; right: 14px;  border-width: 0 2px 2px 0; animation-delay: 1.5s; }
+
 /* ── Loading step transitions ──────────────────────────────── */
 
 @keyframes step-in {

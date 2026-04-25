@@ -224,10 +224,11 @@ body::before {
   font-family:    inherit;
   transition:     background 0.15s, border-color 0.15s;
 }
-.step-btn:hover    { background: rgba(255,255,255,0.04); }
+.step-btn:hover    { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.12); }
 .step-btn.checked  {
-  background:   rgba(0,212,170,0.07);
-  border-color: rgba(0,212,170,0.25);
+  background:   rgba(0,212,170,0.06);
+  border-color: rgba(0,212,170,0.22);
+  box-shadow:   inset 3px 0 0 rgba(0,212,170,0.55);
 }
 
 .step-circle {

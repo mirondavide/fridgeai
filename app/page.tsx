@@ -70,6 +70,16 @@ const LOADING_STEPS = [
   { title: 'Almost there...',          sub: 'Crafting the perfect meal'   },
 ];
 
+const LOADING_TIPS = [
+  '💡 Save pasta water — the starch makes sauces silkier.',
+  '💡 Salt your water generously — it\'s the only chance to season pasta.',
+  '💡 Room-temp eggs beat faster and hold more air.',
+  '💡 Let meat rest after cooking — juices redistribute.',
+  '💡 A hot pan before oil means nothing sticks.',
+  '💡 Acid (lemon, vinegar) brightens any dish at the end.',
+  '💡 Fresh herbs added last, dried herbs added early.',
+];
+
 /* ── Shared motion props ────────────────────────────────── */
 const EASE: [number,number,number,number] = [0.16, 1, 0.3, 1];
 const PAGE_MOTION: { initial: TargetAndTransition; animate: TargetAndTransition; exit: TargetAndTransition; transition: Transition } = {
@@ -239,6 +249,7 @@ export default function FridgeAIPage() {
   const [checked, setChecked]         = useState<Record<string, boolean>>({});
   const [cookMode, setCookMode]       = useState<{ ri: number; si: number } | null>(null);
   const [loadingStep, setLoadingStep] = useState(0);
+  const [tipIdx, setTipIdx]           = useState(0);
   const [cursor, setCursor]           = useState({ x: -1000, y: -1000 });
   const [tilt, setTilt]               = useState({ x: 0, y: 0 });
   const fileRef                       = useRef<HTMLInputElement>(null);
@@ -253,10 +264,11 @@ export default function FridgeAIPage() {
 
   /* Loading step progression */
   useEffect(() => {
-    if (phase !== 'loading') { setLoadingStep(0); return; }
+    if (phase !== 'loading') { setLoadingStep(0); setTipIdx(0); return; }
     const t1 = setTimeout(() => setLoadingStep(1), 2800);
     const t2 = setTimeout(() => setLoadingStep(2), 5500);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
+    const tip = setInterval(() => setTipIdx(i => (i + 1) % LOADING_TIPS.length), 3200);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearInterval(tip); };
   }, [phase]);
 
   /* ── Handlers ───────────────────────────────────────── */
@@ -404,22 +416,59 @@ export default function FridgeAIPage() {
 
           {/* ── PREVIEW ──────────────────────────────── */}
           {phase === 'preview' && imgPreview && (
-            <motion.div key="preview" {...PAGE_MOTION}
-              style={{ maxWidth: '560px', margin: '0 auto', padding: '88px 20px 80px' }}
+            <motion.div key="preview" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}
+              style={{ minHeight: 'calc(100vh - 64px)', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}
             >
-              <p style={{ fontSize: '22px', fontWeight: 800, color: C.text, marginBottom: '16px' }}>Looks delicious. 👀</p>
-              <img
-                src={imgPreview} alt="Your fridge"
-                style={{ width: '100%', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.08)', display: 'block', marginBottom: '16px', maxHeight: '320px', objectFit: 'cover' }}
-              />
-              {error && <p style={{ color: '#f87171', fontWeight: 600, fontSize: '14px', marginBottom: '14px' }}>{error}</p>}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <button className="btn-primary" style={{ width: '100%', padding: '17px', fontSize: '17px', letterSpacing: '0.2px' }} onClick={scan}>
-                  Find my recipes →
-                </button>
-                <button className="btn-ghost" style={{ width: '100%', padding: '16px', fontSize: '15px', fontFamily: 'inherit' }} onClick={reset}>
-                  Use a different photo
-                </button>
+              {/* Blurred ambient background */}
+              <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={imgPreview} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.28) blur(3px)', transform: 'scale(1.06)' }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(5,14,12,0.15) 0%, rgba(5,14,12,0.96) 75%)' }} />
+              </div>
+
+              {/* Centered featured photo */}
+              <div style={{ position: 'relative', zIndex: 1, flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 24px 24px' }}>
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.5, ease: EASE }}
+                  style={{ maxWidth: '540px', width: '100%', position: 'relative' }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={imgPreview} alt="Your fridge"
+                    style={{ width: '100%', borderRadius: '24px', display: 'block', boxShadow: '0 48px 120px rgba(0,0,0,0.7), 0 0 0 1px rgba(0,212,170,0.18)' }}
+                  />
+                  {/* Corner brackets */}
+                  <div style={{ position: 'absolute', top: 12, left: 12, width: 20, height: 20, borderTop: '2px solid rgba(0,212,170,0.6)', borderLeft: '2px solid rgba(0,212,170,0.6)', borderRadius: '2px 0 0 0' }} />
+                  <div style={{ position: 'absolute', top: 12, right: 12, width: 20, height: 20, borderTop: '2px solid rgba(0,212,170,0.6)', borderRight: '2px solid rgba(0,212,170,0.6)', borderRadius: '0 2px 0 0' }} />
+                  <div style={{ position: 'absolute', bottom: 12, left: 12, width: 20, height: 20, borderBottom: '2px solid rgba(0,212,170,0.6)', borderLeft: '2px solid rgba(0,212,170,0.6)', borderRadius: '0 0 0 2px' }} />
+                  <div style={{ position: 'absolute', bottom: 12, right: 12, width: 20, height: 20, borderBottom: '2px solid rgba(0,212,170,0.6)', borderRight: '2px solid rgba(0,212,170,0.6)', borderRadius: '0 0 2px 0' }} />
+                </motion.div>
+              </div>
+
+              {/* Frosted glass bottom panel */}
+              <div style={{ position: 'relative', zIndex: 1, padding: '24px 24px 40px', backdropFilter: 'blur(28px)', WebkitBackdropFilter: 'blur(28px)', borderTop: '1px solid rgba(255,255,255,0.06)', backgroundColor: 'rgba(5,14,12,0.6)' }}>
+                <div style={{ maxWidth: '540px', margin: '0 auto' }}>
+                  {error && <p style={{ color: '#f87171', fontSize: '13px', fontWeight: 600, marginBottom: '12px' }}>{error}</p>}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                    <div>
+                      <p style={{ fontSize: '18px', fontWeight: 800, color: C.text, marginBottom: '3px', letterSpacing: '-0.3px' }}>Photo ready</p>
+                      <p style={{ fontSize: '13px', color: C.muted }}>AI will identify what&apos;s in your fridge</p>
+                    </div>
+                    <button
+                      onClick={reset}
+                      style={{ background: 'none', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', padding: '8px 14px', cursor: 'pointer', color: C.muted, fontSize: '13px', fontFamily: 'inherit', fontWeight: 600, transition: 'border-color 0.15s, color 0.15s', flexShrink: 0 }}
+                      onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.22)'; e.currentTarget.style.color = C.text; }}
+                      onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = C.muted; }}
+                    >
+                      ✕ Different photo
+                    </button>
+                  </div>
+                  <button className="btn-primary" style={{ width: '100%', padding: '17px', fontSize: '17px', letterSpacing: '0.2px' }} onClick={scan}>
+                    Find my recipes →
+                  </button>
+                </div>
               </div>
             </motion.div>
           )}
@@ -461,6 +510,22 @@ export default function FridgeAIPage() {
                   </p>
                 </motion.div>
               </AnimatePresence>
+
+              {/* Rotating cooking tips */}
+              <div style={{ marginTop: '40px', maxWidth: '340px', margin: '40px auto 0' }}>
+                <AnimatePresence mode="wait">
+                  <motion.p
+                    key={tipIdx}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.4 }}
+                    style={{ fontSize: '13px', color: 'rgba(255,255,255,0.28)', fontWeight: 500, lineHeight: 1.6, textAlign: 'center', fontStyle: 'italic' }}
+                  >
+                    {LOADING_TIPS[tipIdx]}
+                  </motion.p>
+                </AnimatePresence>
+              </div>
             </motion.div>
           )}
 
@@ -631,25 +696,81 @@ export default function FridgeAIPage() {
                               {recipe.description}
                             </p>
 
+                            {/* Steps progress bar */}
+                            {(() => {
+                              const doneCount = recipe.steps.filter((_, si) => checked[`${ri}-${si}`]).length;
+                              const pct = recipe.steps.length > 0 ? (doneCount / recipe.steps.length) * 100 : 0;
+                              return (
+                                <div style={{ marginBottom: '14px' }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '7px' }}>
+                                    <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)' }}>Steps</span>
+                                    <span style={{ fontSize: '11px', fontWeight: 800, color: doneCount === recipe.steps.length && doneCount > 0 ? C.primary : C.muted }}>
+                                      {doneCount}/{recipe.steps.length}
+                                    </span>
+                                  </div>
+                                  <div style={{ height: '2px', background: 'rgba(255,255,255,0.06)', borderRadius: '99px', overflow: 'hidden' }}>
+                                    <motion.div
+                                      animate={{ width: `${pct}%` }}
+                                      transition={{ duration: 0.45, ease: EASE }}
+                                      style={{ height: '100%', background: `linear-gradient(90deg, ${C.primary}, #00FFC8)`, borderRadius: '99px' }}
+                                    />
+                                  </div>
+                                </div>
+                              );
+                            })()}
+
                             {/* Steps */}
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            <motion.div
+                              initial="hidden"
+                              animate="visible"
+                              variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.07, delayChildren: 0.05 } } }}
+                              style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}
+                            >
                               {recipe.steps.map((step, si) => {
                                 const k         = `${ri}-${si}`;
                                 const isChecked = !!checked[k];
                                 return (
-                                  <button key={si} className={`step-btn${isChecked ? ' checked' : ''}`} onClick={() => toggleStep(ri, si)}>
+                                  <motion.button
+                                    key={si}
+                                    variants={{ hidden: { opacity: 0, x: -10 }, visible: { opacity: 1, x: 0, transition: { duration: 0.32, ease: EASE } } }}
+                                    whileHover={{ x: 3, scale: 1.012 }}
+                                    whileTap={{ scale: 0.97 }}
+                                    className={`step-btn${isChecked ? ' checked' : ''}`}
+                                    onClick={() => toggleStep(ri, si)}
+                                  >
                                     <div className={`step-circle${isChecked ? ' checked' : ''}`}>
-                                      {isChecked
-                                        ? <span style={{ color: '#fff', fontSize: '13px', fontWeight: 900 }}>✓</span>
-                                        : <span>{si + 1}</span>}
+                                      <AnimatePresence mode="wait" initial={false}>
+                                        {isChecked ? (
+                                          <motion.span
+                                            key="check"
+                                            initial={{ scale: 0, rotate: -30 }}
+                                            animate={{ scale: 1, rotate: 0  }}
+                                            exit={{ scale: 0 }}
+                                            transition={{ duration: 0.22, ease: EASE }}
+                                            style={{ color: '#fff', fontSize: '13px', fontWeight: 900 }}
+                                          >✓</motion.span>
+                                        ) : (
+                                          <motion.span
+                                            key={`n-${si}`}
+                                            initial={{ scale: 0.5, opacity: 0 }}
+                                            animate={{ scale: 1,   opacity: 1 }}
+                                            exit={{ scale: 0.5, opacity: 0 }}
+                                            transition={{ duration: 0.15 }}
+                                          >{si + 1}</motion.span>
+                                        )}
+                                      </AnimatePresence>
                                     </div>
-                                    <span style={{ fontSize: '14px', fontWeight: 600, color: `rgba(255,255,255,${isChecked ? 0.35 : 0.8})`, textDecoration: isChecked ? 'line-through' : 'none', transition: 'color 0.2s', lineHeight: 1.5 }}>
+                                    <motion.span
+                                      animate={{ opacity: isChecked ? 0.3 : 0.82 }}
+                                      transition={{ duration: 0.2 }}
+                                      style={{ fontSize: '14px', fontWeight: 600, lineHeight: 1.55, textDecoration: isChecked ? 'line-through' : 'none' }}
+                                    >
                                       {step}
-                                    </span>
-                                  </button>
+                                    </motion.span>
+                                  </motion.button>
                                 );
                               })}
-                            </div>
+                            </motion.div>
 
                             {/* Missing ingredients */}
                             {recipe.missingIngredients.length > 0 && (
